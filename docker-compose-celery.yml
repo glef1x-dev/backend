@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    privileged: true
+    environment:
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+    command: sh -c "cd src && celery -A app worker -l DEBUG"
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
+      htmltopdf:
+        condition: service_started
+    healthcheck:
+      test: sh -c "cd src && celery -A app inspect ping"
+      interval: 5s
+      timeout: 20s
+      retries: 5
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+
+  celery_flower:
+    image: mher/flower:latest
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - FLOWER_PORT=5555
+    ports:
+      - "3000:5555"
+    depends_on:
+      redis:
+        condition: service_healthy

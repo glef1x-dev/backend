@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=testdb
+      - POSTGRES_INITDB_ARGS=--auth-host=md5
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    ports: # TODO unsafe open ports without reverse proxy like nginx
+      - "80:8000"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    healthcheck:
+      test: curl --fail http://localhost:8000 || exit 1
+      interval: 5s
+      retries: 5
+      timeout: 10s
+    volumes:
+      - ".:/app"
+    depends_on:
+      postgres:
+        condition: service_started
+
+
+volumes:
+  postgres:
