@@ -35,30 +35,7 @@ RUN --mount=type=cache,target="$POETRY_HOME/cache" \
     --mount=type=cache,target="$POETRY_HOME/artifacts" \
     poetry install --only main --no-root
 
-
-# ---- Dev ----
-FROM python-base as development
-
-COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-COPY --from=builder-base $POETRY_HOME $POETRY_HOME
-COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
-
-WORKDIR $PYSETUP_PATH
-RUN --mount=type=cache,target="$POETRY_HOME/cache" \
-    --mount=type=cache,target="$POETRY_HOME/artifacts" \
-    poetry install
-
-WORKDIR /app
-COPY . .
-
-EXPOSE 8080
-CMD ["/bin/sh", "-c", "/docker-entrypoint.sh"]
-
-# ---- Production ----
-FROM python-base as production
-# RUN groupadd -g $GUID -r glibgaranin && useradd --uid $UID -r -g glibgaranin glibgaranin
+FROM python-base
 
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 
