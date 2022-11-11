@@ -1,7 +1,5 @@
 FROM python:3.11-slim-buster as python-base
 
-LABEL MAINTAINER="Glib Garanin <glebgar567@gmail.com>"
-
 # TODO fix uid and guid transportation
 ARG UID=1000
 ARG GUID=1000
@@ -33,7 +31,9 @@ RUN curl -sSL https://install.python-poetry.org | python -
 
 WORKDIR $PYSETUP_PATH
 COPY ./poetry.lock ./pyproject.toml ./
-RUN poetry install --only main --no-root
+RUN --mount=type=cache,target="$POETRY_HOME/cache" \
+    --mount=type=cache,target="$POETRY_HOME/artifacts" \
+    poetry install --only main --no-root
 
 
 # ---- Dev ----
