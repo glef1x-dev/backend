@@ -13,7 +13,7 @@ class Article(TimestampedModel):
         max_length=300
     )
     body = models.TextField(default='hello world', verbose_name='Article content')
-    image = models.ImageField(verbose_name='image of the post', null=True, blank=True)
+    image = models.ImageField(verbose_name='image of the post', null=False)
     tags = models.ManyToManyField('ArticleTag', through='ArticleTagItem')
     slug = AutoSlugField(null=False, blank=False, populate_from="title")
 

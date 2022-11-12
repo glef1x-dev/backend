@@ -12,8 +12,13 @@ urlpatterns = [
                     'post': 'create'
                 }
             ), name='retrieve-or-create-articles'),
-            path('<slug:slug>/', viewsets.RetrieveArticleBySlug.as_view(), name='retrieve-article-by-slug'),
-            path('', viewsets.DeleteArticleAPIView.as_view(), name='delete-article')
+            path('<slug:slug>/', viewsets.DeleteRetrieveUpdateArticleViewSet.as_view(
+                {
+                    'get': 'retrieve',
+                    'delete': 'destroy',
+                    'patch': 'update'
+                }
+            ), name='retrieve-article-by-slug'),
         ]
     ))
 ]

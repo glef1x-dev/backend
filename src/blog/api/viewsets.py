@@ -1,8 +1,7 @@
 from django.db.models import QuerySet
-from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework.generics import DestroyAPIView, UpdateAPIView, RetrieveAPIView
+from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.request import Request
 from rest_framework.viewsets import ModelViewSet
 
 from blog.api.serializers import ArticleSerializer
@@ -19,31 +18,17 @@ class CreateListArticlesAPIViewSet(DeveloperErrorViewMixin, ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-class RetrieveArticleBySlug(DeveloperErrorViewMixin, RetrieveAPIView):
+class DeleteRetrieveUpdateArticleViewSet(DeveloperErrorViewMixin, ModelViewSet):
     serializer_class = ArticleSerializer
     lookup_field = 'slug'
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self) -> QuerySet[Article]:
         return Article.objects.filter(slug=self.kwargs['slug'])
 
+    def check_permissions(self, request: Request):
+        if request.method == "GET":
+            return
 
-@extend_schema(
-    parameters=[
-        OpenApiParameter("slug", OpenApiTypes.STR),
-    ],
-    description="Deletes blog post by it's id or slug",
-    summary="Deletes blog post",
-    tags=["blog"]
-)
-class DeleteArticleAPIView(DeveloperErrorViewMixin, DestroyAPIView):
-    serializer_class = ArticleSerializer
-    permission_classes = [IsAuthenticated]
-    filterset_fields = ("slug",)
+        super().check_permissions(request)
 
-
-class UpdateArticleAPIView(DeveloperErrorViewMixin, UpdateAPIView):
-    serializer_class = ArticleSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Article.objects.filter(pk=self.kwargs['pk'])

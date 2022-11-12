@@ -10,7 +10,7 @@ class ArticleTagSerializer(serializers.ModelSerializer):
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    tags = ArticleTagSerializer(many=True)
+    tags = ArticleTagSerializer(required=False, many=True)
 
     class Meta:
         model = Article
