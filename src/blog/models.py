@@ -1,3 +1,4 @@
+from django.contrib.postgres.indexes import HashIndex
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
 
@@ -19,6 +20,9 @@ class Article(TimestampedModel):
     class Meta:
         verbose_name_plural = 'Articles'
         verbose_name = 'Article'
+        indexes = [
+            HashIndex(fields=["slug"])
+        ]
 
 
 class ArticleTag(DefaultModel):
