@@ -1,13 +1,17 @@
 from app.conf.env_reader import env
 
 ALLOWED_HOSTS = ['*']  # host validation is not necessary in 2020
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8080',
-]
 
 if env('DEBUG'):
-    ABSOLUTE_HOST = 'http://localhost:3000'
+    CSRF_TRUSTED_ORIGINS = [
+        "http://localhost:8000"
+    ]
+    ABSOLUTE_HOST = 'http://localhost:8000'
 else:
-    ABSOLUTE_HOST = 'https://your.app.com'
+    APP_URL = env.str("APP_URL")
+    ABSOLUTE_HOST = APP_URL
+    CSRF_TRUSTED_ORIGINS = [
+        APP_URL
+    ]
 
 APPEND_SLASH = False
