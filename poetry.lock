@@ -431,6 +431,21 @@ typing-extensions = ">=3.10.0"
 compatible-mypy = ["mypy (>=0.950,<0.970)"]
 
 [[package]]
+name = "drf-extra-fields"
+version = "3.4.1"
+description = "Additional fields for Django Rest Framework."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Django = ">=2.2"
+djangorestframework = ">=3.9.2"
+
+[package.extras]
+base64imagefield = ["Pillow (>=6.2.1)"]
+
+[[package]]
 name = "drf-spectacular"
 version = "0.24.2"
 description = "Sane and flexible OpenAPI 3 schema generation for Django REST framework"
@@ -997,7 +1012,7 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "ff8edc71b986c0f8ed3cb1a39fe5737363a4cb1ff598b97002bc4706cae9c01f"
+content-hash = "aad92cb9a6c004bd5ccc5a03f28ee8c86aeb71361d2071de078ab15d15aa0d6c"
 
 [metadata.files]
 argon2-cffi = [
@@ -1321,6 +1336,10 @@ djangorestframework-simplejwt = [
 djangorestframework-stubs = [
     {file = "djangorestframework-stubs-1.7.0.tar.gz", hash = "sha256:6e8a80a0716d8af02aa387dae47f8ef97b6c0efdf159d83a5918d582f8b1ea07"},
     {file = "djangorestframework_stubs-1.7.0-py3-none-any.whl", hash = "sha256:3ac1447fc87f68fe7d8622d4725b5cef820bcc17918f36c7da3f667363fb7a43"},
+]
+drf-extra-fields = [
+    {file = "drf-extra-fields-3.4.1.tar.gz", hash = "sha256:54df0bef56c38ec7efb40e146ada42fa734b5087e45e9e54b2fd23baccc41466"},
+    {file = "drf_extra_fields-3.4.1-py3-none-any.whl", hash = "sha256:a11aeecc85847b0acda6ce57bb144c584c8ebb43ecdf989d8caa7bb130090885"},
 ]
 drf-spectacular = [
     {file = "drf-spectacular-0.24.2.tar.gz", hash = "sha256:be32417594080a52f996afd83fd47ea9c2b83cbf13f6d3fbf3de809a0dfa7ead"},

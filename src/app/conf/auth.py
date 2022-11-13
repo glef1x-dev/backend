@@ -21,7 +21,7 @@ PASSWORD_HASHERS = [
 ]
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'ALGORITHM': 'HS512',
     'UPDATE_LAST_LOGIN': True
 }

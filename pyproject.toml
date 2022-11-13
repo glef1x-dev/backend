@@ -34,6 +34,7 @@ python-json-logger = "^2.0.4"
 django-structlog = "^4.0.0"
 django-extensions = "^3.2.1"
 boto3 = "^1.26.8"
+drf-extra-fields = "^3.4.1"
 
 
 [tool.poetry.group.dev.dependencies]
