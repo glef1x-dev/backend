@@ -1,6 +1,7 @@
 from django.contrib.postgres.indexes import HashIndex
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
+from rest_framework.exceptions import ValidationError
 
 from app.models import TimestampedModel, DefaultModel
 
@@ -16,6 +17,10 @@ class Article(TimestampedModel):
     image = models.ImageField(verbose_name='image of the post', null=False)
     tags = models.ManyToManyField('ArticleTag', through='ArticleTagItem')
     slug = AutoSlugField(null=False, blank=False, populate_from="title")
+
+    def clean(self) -> None:
+        if self.tags.count() < 1:
+            raise ValidationError("There is should be at least one tag specified.")
 
     class Meta:
         verbose_name_plural = 'Articles'
@@ -36,3 +41,6 @@ class ArticleTag(DefaultModel):
 class ArticleTagItem(DefaultModel):
     tag = models.ForeignKey(ArticleTag, on_delete=models.CASCADE)
     post = models.ForeignKey(Article, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("tag", "post")
