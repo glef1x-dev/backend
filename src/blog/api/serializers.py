@@ -1,3 +1,4 @@
+from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 
 from blog.models import ArticleTag, Article
@@ -10,7 +11,7 @@ class ArticleTagSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ArticleSerializer(serializers.ModelSerializer):
+class ArticleSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
     tags = ArticleTagSerializer(required=False, many=True)
     image = Base64ImageField()
 
