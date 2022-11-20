@@ -1,24 +1,14 @@
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from blog.api import viewsets
+from blog.api.viewsets import ArticleViewSet
+
+router = DefaultRouter()
+
+router.register(r'articles', ArticleViewSet, basename='article')
 
 app_name = 'blog'
+
 urlpatterns = [
-    path('articles/', include(
-        [
-            path('', viewsets.CreateListArticlesAPIViewSet.as_view(
-                {
-                    'get': 'list',
-                    'post': 'create'
-                }
-            ), name='retrieve-or-create-articles'),
-            path('<slug:slug>/', viewsets.DeleteRetrieveUpdateArticleViewSet.as_view(
-                {
-                    'get': 'retrieve',
-                    'delete': 'destroy',
-                    'patch': 'update'
-                }
-            ), name='article-by-slug'),
-        ]
-    ))
+    path(r'blog/', include(router.urls))
 ]

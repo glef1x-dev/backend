@@ -19,11 +19,6 @@ class DeveloperErrorResponseException(Exception):
 
 
 class DeveloperErrorViewMixin:
-    """
-    A view mixin to handle common error cases other than validation failure
-    (auth failure, method not allowed, etc.) by generating an error response
-    conforming to our API conventions with a developer message.
-    """
 
     @classmethod
     def api_error(cls, status_code: int, developer_message: str,

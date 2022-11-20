@@ -4,5 +4,5 @@ from users.api import viewsets
 
 app_name = 'users'
 urlpatterns = [
-    path('me/', viewsets.SelfView.as_view()),
+    path('me/', viewsets.SelfView.as_view(), name="get-current-user"),
 ]
