@@ -5,7 +5,7 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CON
 
 from app.testing import ApiClient
 from blog.models import Article
-from blog.utils.images import file_to_base64
+from blog.utils.files import file_to_base64
 
 pytestmark = pytest.mark.django_db
 
