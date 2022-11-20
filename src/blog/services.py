@@ -1,10 +1,13 @@
 from typing import Dict, Any, TypeVar, Iterator, Iterable
 
+from django.db import transaction
+
 from blog.models import Article, ArticleTag, ArticleTagItem
 
 _T = TypeVar('_T')
 
 
+@transaction.atomic
 def create_article_from_dictionary(data: Dict[str, Any]) -> Article:
     tags = data.pop('tags')
     article = Article.objects.create(**data)

@@ -1,6 +1,5 @@
 from typing import Dict, Any
 
-from django.db import transaction
 from drf_extra_fields.fields import HybridImageField
 from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
@@ -23,7 +22,6 @@ class ArticleSerializer(WritableNestedModelSerializer):
     tags = ArticleTagSerializer(many=True)
     image = HybridImageField()
 
-    @transaction.atomic
     def create(self, validated_data: Dict[str, Any]) -> Article:
         return create_article_from_dictionary(validated_data)
 
