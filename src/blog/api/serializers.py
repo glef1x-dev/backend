@@ -1,8 +1,8 @@
+from drf_extra_fields.fields import HybridImageField
 from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 
 from blog.models import ArticleTag, Article
-from drf_extra_fields.fields import Base64ImageField
 
 
 class ArticleTagSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class ArticleTagSerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(WritableNestedModelSerializer, serializers.ModelSerializer):
     tags = ArticleTagSerializer(required=False, many=True)
-    image = Base64ImageField()
+    image = HybridImageField()
 
     class Meta:
         model = Article

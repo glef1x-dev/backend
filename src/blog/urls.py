@@ -18,7 +18,7 @@ urlpatterns = [
                     'delete': 'destroy',
                     'patch': 'update'
                 }
-            ), name='retrieve-article-by-slug'),
+            ), name='article-by-slug'),
         ]
     ))
 ]
