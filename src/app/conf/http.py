@@ -14,9 +14,6 @@ else:
     ABSOLUTE_HOST = APP_URL
     CSRF_TRUSTED_ORIGINS = [APP_URL]
 
-    # TODO still unsafe parsing, but I don't wanna install another third-party library
-    # Just leave it here if the problem will appear in future for domains like "something.co.uk"
-    # https://stackoverflow.com/questions/1521592/get-root-domain-of-link
     root_domain = tldextract.extract(APP_URL).registered_domain
     CORS_ALLOWED_ORIGINS = [f"https://{root_domain}", f"https://admin.{root_domain}"]
     CSRF_TRUSTED_ORIGINS = [
