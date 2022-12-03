@@ -1,4 +1,5 @@
 # Application definition
+from django.conf import settings
 
 APPS = [
     'app',
@@ -34,3 +35,10 @@ THIRD_PARTY_APPS = [
 ]
 
 INSTALLED_APPS = APPS + HEALTH_CHECKS_APPS + THIRD_PARTY_APPS
+
+if not settings.DEBUG:
+    INSTALLED_APPS.remove('baton')
+    INSTALLED_APPS.remove('django.contrib.admin')
+    INSTALLED_APPS.remove('django.contrib.sessions')
+    INSTALLED_APPS.remove('django.contrib.messages')
+    INSTALLED_APPS.remove('baton.autodiscover')

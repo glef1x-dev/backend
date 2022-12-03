@@ -19,6 +19,9 @@ class Article(TimestampedModel):
     slug = AutoSlugField(null=False, blank=False, populate_from="title")
 
     def clean(self) -> None:
+        if self.pk is None:
+            return
+
         if self.tags.count() < 1:
             raise ValidationError("There is should be at least one tag specified.")
 
@@ -28,6 +31,15 @@ class Article(TimestampedModel):
         indexes = [
             HashIndex(fields=["slug"])
         ]
+
+
+class ArticleLike(TimestampedModel):
+    ip_address = models.GenericIPAddressField(null=True)
+    browser_fingerprint = models.TextField()
+    article = models.ForeignKey(to=Article, on_delete=models.CASCADE, related_name='likes')
+
+    class Meta:
+        unique_together = [('browser_fingerprint', 'article')]
 
 
 class ArticleTag(DefaultModel):

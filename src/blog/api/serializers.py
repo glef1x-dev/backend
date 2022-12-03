@@ -1,11 +1,14 @@
+import logging
 from typing import Dict, Any
 
 from drf_extra_fields.fields import HybridImageField
 from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 
-from blog.models import ArticleTag, Article
-from blog.services import create_article_from_dictionary
+from blog.models import ArticleTag, Article, ArticleLike
+from blog.services import create_article
+
+logger = logging.getLogger(__name__)
 
 
 class ArticleTagSerializer(serializers.ModelSerializer):
@@ -18,14 +21,34 @@ class ArticleTagSerializer(serializers.ModelSerializer):
         ordering = ('-id',)
 
 
+class ArticleLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArticleLike
+        fields = ('ip_address', 'browser_fingerprint')
+
+
 class ArticleSerializer(WritableNestedModelSerializer):
     tags = ArticleTagSerializer(many=True)
     image = HybridImageField()
+    likes_count = serializers.SerializerMethodField(read_only=True)
+    likes = ArticleLikeSerializer(many=True, write_only=True)
 
     def create(self, validated_data: Dict[str, Any]) -> Article:
-        return create_article_from_dictionary(validated_data)
+        return create_article(**validated_data)
+
+    def get_likes_count(self, article: Article) -> int:
+        try:
+            return article.likes_count
+        except AttributeError:
+            logger.error(
+                "Likes count field is not set on object required by `ArticleSerializer`."
+                "Set default value for likes count = 0.",
+                stacklevel=2
+            )
+            return 0
 
     class Meta:
         model = Article
-        fields = ["title", "created", "image", "modified", "description", "body", "tags", "slug"]
+        fields = ["title", "likes", "created", "image", "modified", "description", "likes_count", "body", "tags",
+                  "slug"]
         ordering = ('-modified',)

@@ -30,9 +30,11 @@ PASSWORD_HASHERS = [
 ]
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=20),
     'ALGORITHM': 'HS512',
-    'UPDATE_LAST_LOGIN': True
+    'UPDATE_LAST_LOGIN': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ROTATE_REFRESH_TOKENS': True
 }
 
-TEST_RUNNER = 'app.testing.runner.PytestTestRunner'
+REFRESH_TOKEN_COOKIE_NAME = env.str('REFRESH_TOKEN_COOKIE_NAME', 'refresh')

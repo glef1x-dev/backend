@@ -1,5 +1,3 @@
-from django.conf import settings
-
 from app.conf.env_reader import env
 
 # Django REST Framework
@@ -35,11 +33,6 @@ REST_FRAMEWORK = {
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
-
-# Adding session auth and browsable API at the developer machine
-if env('DEBUG', cast=bool, default=True):
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append('djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer')
-
 
 # Set up drf_spectacular, https://drf-spectacular.readthedocs.io/en/latest/settings.html
 SPECTACULAR_SETTINGS = {

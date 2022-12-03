@@ -1,3 +1,5 @@
+from django.conf import settings
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -13,3 +15,8 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'django_structlog.middlewares.RequestMiddleware',
 ]
+
+if not settings.DEBUG:
+    MIDDLEWARE.remove('django.contrib.sessions.middleware.SessionMiddleware')
+    MIDDLEWARE.remove('django.contrib.auth.middleware.AuthenticationMiddleware')
+    MIDDLEWARE.remove('django.contrib.messages.middleware.MessageMiddleware')

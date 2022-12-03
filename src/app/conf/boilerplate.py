@@ -7,7 +7,7 @@ BASE_DIR = pathlib.Path(__file__).parent.parent.resolve()
 ROOT_URLCONF = 'app.urls'
 
 # Disable built-in ./manage.py test command in favor of pytest
-TEST_RUNNER = 'app.test.disable_test_command_runner.DisableTestCommandRunner'
+TEST_RUNNER = 'app.testing.runner.PytestTestRunner'
 
 WSGI_APPLICATION = 'app.wsgi.application'
 

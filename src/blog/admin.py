@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from app.admin import ModelAdmin
-from blog.models import ArticleTagItem, Article, ArticleTag
+from blog.models import ArticleTagItem, Article, ArticleTag, ArticleLike
 
 
 class BlogPostTagInline(admin.TabularInline):
@@ -16,6 +16,11 @@ class ArticleAdminModel(ModelAdmin):
 
 @admin.register(ArticleTag)
 class ArticleTagAdminModel(ModelAdmin):
+    pass
+
+
+@admin.register(ArticleLike)
+class ArticleLikeAdminModel(ModelAdmin):
     pass
 
 

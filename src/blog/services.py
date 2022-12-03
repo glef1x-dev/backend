@@ -1,4 +1,4 @@
-from typing import Dict, Any, TypeVar, Iterator, Iterable
+from typing import Any, TypeVar, Iterator, Iterable
 
 from django.db import transaction
 
@@ -8,9 +8,9 @@ _T = TypeVar('_T')
 
 
 @transaction.atomic
-def create_article_from_dictionary(data: Dict[str, Any]) -> Article:
-    tags = data.pop('tags')
-    article = Article.objects.create(**data)
+def create_article(**kwargs: Any) -> Article:
+    tags = kwargs.pop('tags')
+    article = Article.objects.create(**kwargs)
     article_tags = tuple(_only_first_element_from_tuples(
         ArticleTag.objects.get_or_create(**tag) for tag in tags
     ))
