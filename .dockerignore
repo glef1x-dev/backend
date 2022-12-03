@@ -2,3 +2,4 @@ static/
 .circleci/
 db.sqlite
 __pycache__/
+.ruff_cache
