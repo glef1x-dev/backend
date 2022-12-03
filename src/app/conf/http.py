@@ -1,6 +1,5 @@
-import urllib.parse
-
 from corsheaders.defaults import default_headers
+import tldextract
 
 from app.conf.env_reader import env
 
@@ -18,7 +17,7 @@ else:
     # TODO still unsafe parsing, but I don't wanna install another third-party library
     # Just leave it here if the problem will appear in future for domains like "something.co.uk"
     # https://stackoverflow.com/questions/1521592/get-root-domain-of-link
-    root_domain = str(urllib.parse.urlparse(APP_URL).hostname)
+    root_domain = tldextract.extract(APP_URL).registered_domain
     CORS_ALLOWED_ORIGINS = [f"https://{root_domain}", f"https://admin.{root_domain}"]
     CSRF_TRUSTED_ORIGINS = [
         f"https://*.{root_domain}",
