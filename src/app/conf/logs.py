@@ -1,6 +1,7 @@
 import logging
 
 import structlog
+
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
@@ -11,60 +12,58 @@ if settings.DEBUG:
 else:
     RENDERER = structlog.processors.JSONRenderer(serializer=settings.JSON_SERIALIZER)
 
-LOGGING_TIMESTAMP_FORMAT = env('LOGGING_TIMESTAMP_FORMAT', cast=str, default='iso')
+LOGGING_TIMESTAMP_FORMAT = env("LOGGING_TIMESTAMP_FORMAT", cast=str, default="iso")
 logging_level_name = env(
-    'LOGGING_LEVEL',
-    cast=str,
-    default="DEBUG" if settings.DEBUG else "INFO"
+    "LOGGING_LEVEL", cast=str, default="DEBUG" if settings.DEBUG else "INFO"
 )
 try:
     LOGGING_LEVEL = logging.getLevelNamesMapping()[logging_level_name]
-except KeyError as ex:
+except KeyError:
     raise ImproperlyConfigured(
         "LOGGING_LEVEL setting should be valid python logging option. "
         f"Your value is {logging_level_name}",
     )
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'structlog': {
-            '()': structlog.stdlib.ProcessorFormatter,
-            'processors': [
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "structlog": {
+            "()": structlog.stdlib.ProcessorFormatter,
+            "processors": [
                 structlog.stdlib.ProcessorFormatter.remove_processors_meta,
                 RENDERER,
             ],
-            'foreign_pre_chain': [
+            "foreign_pre_chain": [
                 structlog.contextvars.merge_contextvars,
                 structlog.stdlib.add_log_level,
                 structlog.processors.TimeStamper(fmt=LOGGING_TIMESTAMP_FORMAT),
             ],
         }
     },
-    'handlers': {
-        'primary': {
-            'class': 'logging.StreamHandler',
-            'stream': 'ext://sys.stdout',
-            'formatter': 'structlog',
+    "handlers": {
+        "primary": {
+            "class": "logging.StreamHandler",
+            "stream": "ext://sys.stdout",
+            "formatter": "structlog",
         },
     },
-    'root': {
-        'level': LOGGING_LEVEL,
-        'handlers': ['primary'],
+    "root": {
+        "level": LOGGING_LEVEL,
+        "handlers": ["primary"],
     },
-    'loggers': {
-        'django': {
-            'handlers': ['primary'],
-            'level': LOGGING_LEVEL,
-            'propagate': False,
+    "loggers": {
+        "django": {
+            "handlers": ["primary"],
+            "level": LOGGING_LEVEL,
+            "propagate": False,
         },
-        'django.request': {
-            'handlers': ['primary'],
-            'level': 'ERROR',
-            'propagate': False,
+        "django.request": {
+            "handlers": ["primary"],
+            "level": "ERROR",
+            "propagate": False,
         },
-    }
+    },
 }
 
 structlog.configure(

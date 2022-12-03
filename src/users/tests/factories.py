@@ -9,10 +9,11 @@ class UserFactory(factory.django.DjangoModelFactory):
     """
     Pytest integrated user factory using pytest-factoryboy
     """
+
     class Meta:
         model = User
 
-    username = 'dumb'
-    first_name = 'John'
-    last_name = 'dumb'
-    password = factory.PostGenerationMethodCall('set_password', 'dumb')
+    username = "dumb"
+    first_name = "John"
+    last_name = "dumb"
+    password = factory.PostGenerationMethodCall("set_password", "dumb")

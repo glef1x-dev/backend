@@ -1,21 +1,23 @@
-from django.contrib.postgres.indexes import HashIndex
-from django.db import models
 from django_extensions.db.fields import AutoSlugField
 from rest_framework.exceptions import ValidationError
 
-from app.models import TimestampedModel, DefaultModel
+from django.contrib.postgres.indexes import HashIndex
+from django.db import models
+
+from app.models import DefaultModel
+from app.models import TimestampedModel
 
 
 class Article(TimestampedModel):
-    title = models.CharField(max_length=120, verbose_name='Title of the article', db_index=True)
-    description = models.CharField(
-        verbose_name='Description of the article',
-        null=False,
-        max_length=300
+    title = models.CharField(
+        max_length=120, verbose_name="Title of the article", db_index=True
     )
-    body = models.TextField(default='hello world', verbose_name='Article content')
-    image = models.ImageField(verbose_name='image of the post', null=False)
-    tags = models.ManyToManyField('ArticleTag', through='ArticleTagItem')
+    description = models.CharField(
+        verbose_name="Description of the article", null=False, max_length=300
+    )
+    body = models.TextField(default="hello world", verbose_name="Article content")
+    image = models.ImageField(verbose_name="image of the post", null=False)
+    tags = models.ManyToManyField("ArticleTag", through="ArticleTagItem")
     slug = AutoSlugField(null=False, blank=False, populate_from="title")
 
     def clean(self) -> None:
@@ -26,28 +28,28 @@ class Article(TimestampedModel):
             raise ValidationError("There is should be at least one tag specified.")
 
     class Meta:
-        verbose_name_plural = 'Articles'
-        verbose_name = 'Article'
-        indexes = [
-            HashIndex(fields=["slug"])
-        ]
+        verbose_name_plural = "Articles"
+        verbose_name = "Article"
+        indexes = [HashIndex(fields=["slug"])]
 
 
 class ArticleLike(TimestampedModel):
     ip_address = models.GenericIPAddressField(null=True)
     browser_fingerprint = models.TextField()
-    article = models.ForeignKey(to=Article, on_delete=models.CASCADE, related_name='likes')
+    article = models.ForeignKey(
+        to=Article, on_delete=models.CASCADE, related_name="likes"
+    )
 
     class Meta:
-        unique_together = [('browser_fingerprint', 'article')]
+        unique_together = [("browser_fingerprint", "article")]
 
 
 class ArticleTag(DefaultModel):
     title = models.CharField(max_length=100, unique=True)
 
     class Meta:
-        verbose_name_plural = 'Article tags'
-        verbose_name = 'Article tag'
+        verbose_name_plural = "Article tags"
+        verbose_name = "Article tag"
 
 
 class ArticleTagItem(DefaultModel):

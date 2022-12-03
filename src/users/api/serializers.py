@@ -9,13 +9,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'email',
-            'remote_addr',
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "remote_addr",
         ]
 
     def get_remote_addr(self, _: User) -> str:
-        return self.context['request'].META['REMOTE_ADDR']
+        return self.context["request"].META["REMOTE_ADDR"]

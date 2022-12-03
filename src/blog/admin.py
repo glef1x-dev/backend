@@ -1,7 +1,10 @@
 from django.contrib import admin
 
 from app.admin import ModelAdmin
-from blog.models import ArticleTagItem, Article, ArticleTag, ArticleLike
+from blog.models import Article
+from blog.models import ArticleLike
+from blog.models import ArticleTag
+from blog.models import ArticleTagItem
 
 
 class BlogPostTagInline(admin.TabularInline):

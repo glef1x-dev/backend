@@ -7,12 +7,14 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0003_remove_image_label_field'),
+        ("blog", "0003_remove_image_label_field"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='article',
-            index=django.contrib.postgres.indexes.HashIndex(fields=['slug'], name='blog_articl_slug_3ff554_hash'),
+            model_name="article",
+            index=django.contrib.postgres.indexes.HashIndex(
+                fields=["slug"], name="blog_articl_slug_3ff554_hash"
+            ),
         ),
     ]

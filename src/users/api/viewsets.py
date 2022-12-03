@@ -1,7 +1,8 @@
-from django.db.models import QuerySet
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
+
+from django.db.models import QuerySet
 
 from common.rest_api.api_view_error_mixin import DeveloperErrorViewMixin
 from users.api.serializers import UserSerializer
@@ -10,7 +11,7 @@ from users.models import User
 
 @extend_schema(
     summary="Get a current user",
-    description="Get a current user using authorization that was provided"
+    description="Get a current user using authorization that was provided",
 )
 class SelfView(DeveloperErrorViewMixin, RetrieveAPIView):
     serializer_class = UserSerializer

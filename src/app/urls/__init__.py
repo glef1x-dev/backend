@@ -5,17 +5,17 @@ from django.urls import include
 from django.urls import path
 
 api = [
-    path('v1/', include('app.urls.v1', namespace='v1')),
+    path("v1/", include("app.urls.v1", namespace="v1")),
 ]
 
 urlpatterns = [
-    path('api/', include(api)),
+    path("api/", include(api)),
 ]
 
 # Our real admin panel is written with react-admin
 if settings.DEBUG:
     urlpatterns += [
-        path('admin/', admin.site.urls),
-        path('baton/', include('baton.urls')),
+        path("admin/", admin.site.urls),
+        path("baton/", include("baton.urls")),
     ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

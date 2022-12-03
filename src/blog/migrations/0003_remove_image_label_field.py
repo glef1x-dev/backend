@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0002_add_lenght_restriction_for_description'),
+        ("blog", "0002_add_lenght_restriction_for_description"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='article',
-            name='image_label',
+            model_name="article",
+            name="image_label",
         ),
     ]

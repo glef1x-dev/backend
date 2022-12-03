@@ -2,7 +2,7 @@ import pathlib
 
 import environ
 
-PATH_TO_ENV_FILE = (pathlib.Path(__file__).parent.parent / '.env').resolve()
+PATH_TO_ENV_FILE = (pathlib.Path(__file__).parent.parent / ".env").resolve()
 
 env = environ.Env(
     DEBUG=(bool, False),
