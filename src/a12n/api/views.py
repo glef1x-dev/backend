@@ -3,7 +3,6 @@ from typing import Any
 from drf_spectacular.utils import extend_schema
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.views import TokenBlacklistView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -11,20 +10,14 @@ from rest_framework_simplejwt.views import TokenVerifyView
 
 from django.conf import settings
 
+from a12n.utils import set_refresh_token_cookie_to_admin_panel
+
 
 @extend_schema(summary="Get a new jwt token pair")
 class ObtainJSONWebTokenView(TokenObtainPairView):
     def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         response = super().post(request, *args, **kwargs)
-        # TODO refactor and move it to the utility function
-        refresh_token = response.data["refresh"]
-        response.set_cookie(
-            settings.REFRESH_TOKEN_COOKIE_NAME,
-            refresh_token,
-            max_age=api_settings.REFRESH_TOKEN_LIFETIME,
-            httponly=True,
-            samesite="Strict",
-        )
+        set_refresh_token_cookie_to_admin_panel(response)
         return response
 
 
@@ -41,14 +34,7 @@ class RefreshJSONWebTokenView(TokenRefreshView):
             "refresh", request.COOKIES.get(settings.REFRESH_TOKEN_COOKIE_NAME)
         )
         response = super().post(request, *args, **kwargs)
-        refresh_token = response.data["refresh"]
-        response.set_cookie(
-            settings.REFRESH_TOKEN_COOKIE_NAME,
-            refresh_token,
-            max_age=api_settings.REFRESH_TOKEN_LIFETIME,
-            httponly=True,
-            samesite="Strict",
-        )
+        set_refresh_token_cookie_to_admin_panel(response)
         return response
 
 
