@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models import Count
@@ -16,7 +16,7 @@ from common.rest_api.api_view_error_mixin import DeveloperErrorViewMixin
 class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
     lookup_field = "slug"
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer: ArticleSerializer) -> None:
         article_image: SimpleUploadedFile = serializer.validated_data.get('image')
