@@ -33,11 +33,11 @@ def test_create_article(as_user: ApiClient, article: Article):
     # because pytest-factoryboy stores all factory artifacts in database
     article.delete()
 
-    article_dict = model_to_dict(article)
-    article_dict["image"] = file_to_base64(article_dict["image"])
+    article_dict = model_to_dict(article, exclude=["image"])
+    article_dict['image'] = file_to_base64(article.image)
 
     as_user.post(
-        reverse("v1:blog:article-create"),
+        reverse("v1:blog:article-list"),
         article_dict,
         format="json",
         expected_status=HTTP_201_CREATED,
@@ -47,11 +47,12 @@ def test_create_article(as_user: ApiClient, article: Article):
 
 
 def test_create_article_that_already_exists(as_user: ApiClient, article: Article):
-    article_dict = model_to_dict(article)
-    article_dict["image"] = file_to_base64(article_dict["image"])
+    article_dict = model_to_dict(article, exclude=["image"])
+    article_dict['image'] = file_to_base64(article.image)
+    article_dict['tags'] = [model_to_dict(tag) for tag in article_dict['tags']]
 
     as_user.post(
-        reverse("v1:blog:article-create"),
+        reverse("v1:blog:article-list"),
         article_dict,
         format="json",
         expected_status=HTTP_201_CREATED,
@@ -60,7 +61,7 @@ def test_create_article_that_already_exists(as_user: ApiClient, article: Article
 
 def test_delete_article(as_user: ApiClient, article: Article):
     as_user.delete(
-        reverse("v1:blog:article-delete", kwargs={"slug": article.slug}),
+        reverse("v1:blog:article-detail", kwargs={"slug": article.slug}),
         format="json",
         expected_status=HTTP_204_NO_CONTENT,
     )
@@ -70,7 +71,7 @@ def test_delete_article(as_user: ApiClient, article: Article):
 
 def test_delete_article_that_does_not_exists(as_user: ApiClient):
     as_user.delete(
-        reverse("v1:blog:article-delete", kwargs={"slug": "sfaz"}),
+        reverse("v1:blog:article-detail", kwargs={"slug": "sfaz"}),
         format="json",
         expected_status=HTTP_404_NOT_FOUND,
     )
@@ -78,7 +79,7 @@ def test_delete_article_that_does_not_exists(as_user: ApiClient):
 
 def test_get_single_article(as_anon: ApiClient, article: Article):
     blog_post_json = as_anon.get(
-        reverse("v1:blog:article-retrieve", kwargs={"slug": article.slug}),
+        reverse("v1:blog:article-detail", kwargs={"slug": article.slug}),
         format="json",
         expected_status=HTTP_200_OK,
     )
@@ -87,7 +88,7 @@ def test_get_single_article(as_anon: ApiClient, article: Article):
 
 def test_get_single_article_that_does_not_exist(as_user: ApiClient):
     as_user.get(
-        reverse("v1:blog:article-retrieve", kwargs={"slug": "ababa"}),
+        reverse("v1:blog:article-detail", kwargs={"slug": "ababa"}),
         format="json",
         expected_status=HTTP_404_NOT_FOUND,
     )

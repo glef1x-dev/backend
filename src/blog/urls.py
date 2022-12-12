@@ -1,11 +1,10 @@
-from rest_framework.routers import DefaultRouter
+from rest_framework import routers
 
-from blog.api.viewsets import ArticleViewSet
-
-router = DefaultRouter()
-
-router.register(r"articles", ArticleViewSet, basename="article")
+from blog.api import views
 
 app_name = "blog"
+
+router = routers.DefaultRouter()
+router.register(r"articles", views.ArticleViewSet, basename="article")
 
 urlpatterns = router.urls

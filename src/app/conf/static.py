@@ -4,6 +4,7 @@ from app.conf.env_reader import env
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+
 STATIC_ROOT = env("STATIC_ROOT", cast=str, default="static")
 
 if settings.DEBUG:

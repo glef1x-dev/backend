@@ -11,7 +11,7 @@ def file_to_base64(file: FieldFile) -> str:
     :return: base64 representation of the file
     """
     try:
-        with open(file.path, "rb") as f:
+        with file.open("rb") as f:
             return base64.b64encode(f.read()).decode()
     except Exception:
         raise OSError("Error encoding file")

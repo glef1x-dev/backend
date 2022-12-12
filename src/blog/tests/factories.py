@@ -2,16 +2,22 @@ import pathlib
 import pytest
 from typing import List
 
+from _pytest.fixtures import fixture
 import factory
 import pytest_factoryboy
 
-from django.core.files.base import ContentFile
-from django.core.files.base import File
+from django.conf import LazySettings
 
 from blog.models import Article
+from blog.models import ArticleLike
 from blog.models import ArticleTag
 
-_BASE_DIR = pathlib.Path(__file__).parent.resolve()
+_BASE_TESTS_DIR = pathlib.Path(__file__).parent.resolve()
+
+
+@pytest.fixture(autouse=True)
+def change_media_root_directory(settings: LazySettings):
+    settings.MEDIA_ROOT = _BASE_TESTS_DIR / "media"
 
 
 @pytest_factoryboy.register(name="article_tag")
@@ -22,14 +28,24 @@ class ArticleTagFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: "Tag #%s" % n)
 
 
+class ArticleLikeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ArticleLike
+
+    ip_address = factory.Faker('ipv4')
+    browser_fingerprint = "fake_fingerprint"
+
+
 @pytest_factoryboy.register(name="article")
 class ArticleFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Article
+        exclude = ('images',)
 
     title = "test"
     description = "test"
     body = "test"
+    image = factory.django.ImageField(color='blue')
 
     @factory.post_generation
     def tags(self, create: bool, extracted: List[ArticleTag]) -> None:
@@ -50,8 +66,11 @@ def article__tags(article_tag: ArticleTag):
     return [article_tag]
 
 
-@pytest.fixture
-def article__image() -> File:
-    image_name = "blue-square.jpg"
-    with open(_BASE_DIR / "media" / image_name, "rb") as file:
-        return File(ContentFile(file.read()), image_name)
+@fixture(autouse=True, scope='session')
+def my_fixture():
+    yield
+
+    # Garbage collecting all images used in tests
+    for file_like in (_BASE_TESTS_DIR / "media").glob("*"):
+        if file_like.is_file():
+            file_like.unlink()
