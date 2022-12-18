@@ -52,6 +52,7 @@ class ArticleSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Article
         fields = [
+            "id",
             "title",
             "likes",
             "created",

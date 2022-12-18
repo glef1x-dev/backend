@@ -1,3 +1,5 @@
+from django_filters import filters
+from django_filters import FilterSet
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -12,11 +14,20 @@ from common.images import convert_image_to_webp_format
 from common.rest_api.api_view_error_mixin import DeveloperErrorViewMixin
 
 
+class ArticleFilter(FilterSet):
+    has_tag = filters.CharFilter('tags__title', lookup_expr='iexact')
+
+    class Meta:
+        model = Article
+        fields = ['tags__title']
+
+
 @extend_schema(tags=["blog"])
 class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
     lookup_field = "slug"
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filterset_class = ArticleFilter
 
     def perform_create(self, serializer: ArticleSerializer) -> None:
         article_image: SimpleUploadedFile = serializer.validated_data.get('image')
@@ -24,6 +35,8 @@ class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
         serializer.save()
 
     def get_queryset(self) -> QuerySet[Article]:
-        article_queryset = Article.objects.order_by("created").prefetch_related("tags")
+        article_queryset = Article.objects.order_by("created").prefetch_related("tags").annotate(
+            likes_count=Count("likes__id")
+        )
 
-        return article_queryset.annotate(likes_count=Count("likes__id"))
+        return article_queryset
