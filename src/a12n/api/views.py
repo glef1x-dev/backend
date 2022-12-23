@@ -10,14 +10,15 @@ from rest_framework_simplejwt.views import TokenVerifyView
 
 from django.conf import settings
 
-from a12n.utils import set_refresh_token_cookie_to_admin_panel
+from a12n.utils import delete_refresh_token_cookie
+from a12n.utils import set_refresh_token_cookie
 
 
 @extend_schema(summary="Get a new jwt token pair")
 class ObtainJSONWebTokenView(TokenObtainPairView):
     def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         response = super().post(request, *args, **kwargs)
-        set_refresh_token_cookie_to_admin_panel(response)
+        set_refresh_token_cookie(response)
         return response
 
 
@@ -34,7 +35,7 @@ class RefreshJSONWebTokenView(TokenRefreshView):
             "refresh", request.COOKIES.get(settings.REFRESH_TOKEN_COOKIE_NAME)
         )
         response = super().post(request, *args, **kwargs)
-        set_refresh_token_cookie_to_admin_panel(response)
+        set_refresh_token_cookie(response)
         return response
 
 
@@ -45,4 +46,12 @@ class VerifyJSONWebTokenView(TokenVerifyView):
 
 @extend_schema(summary="Blacklist a token")
 class BlacklistJSONWebTokenView(TokenBlacklistView):
-    pass
+    _serializer_class = "a12n.api.serializers.TokenBlackListSerializer"
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        response = super().post(request, *args, **kwargs)
+
+        if request.COOKIES.get(settings.REFRESH_TOKEN_COOKIE_NAME):
+            delete_refresh_token_cookie(response)
+
+        return response
