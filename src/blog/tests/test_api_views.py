@@ -34,7 +34,7 @@ def test_create_article(as_user: ApiClient, article: Article):
     article.delete()
 
     article_dict = model_to_dict(article, exclude=["image"])
-    article_dict['image'] = file_to_base64(article.image)
+    article_dict["image"] = file_to_base64(article.image)
 
     as_user.post(
         reverse("v1:blog:article-list"),
@@ -48,8 +48,8 @@ def test_create_article(as_user: ApiClient, article: Article):
 
 def test_create_article_that_already_exists(as_user: ApiClient, article: Article):
     article_dict = model_to_dict(article, exclude=["image"])
-    article_dict['image'] = file_to_base64(article.image)
-    article_dict['tags'] = [model_to_dict(tag) for tag in article_dict['tags']]
+    article_dict["image"] = file_to_base64(article.image)
+    article_dict["tags"] = [model_to_dict(tag) for tag in article_dict["tags"]]
 
     as_user.post(
         reverse("v1:blog:article-list"),

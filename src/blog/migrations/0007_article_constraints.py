@@ -8,22 +8,26 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0006_add_article_likes'),
+        ("blog", "0006_add_article_likes"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='articlelike',
-            name='article',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='likes', to='blog.article'),
+            model_name="articlelike",
+            name="article",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="likes",
+                to="blog.article",
+            ),
         ),
         migrations.AlterField(
-            model_name='articlelike',
-            name='ip_address',
+            model_name="articlelike",
+            name="ip_address",
             field=models.GenericIPAddressField(null=True),
         ),
         migrations.AlterUniqueTogether(
-            name='articlelike',
-            unique_together={('browser_fingerprint', 'article')},
+            name="articlelike",
+            unique_together={("browser_fingerprint", "article")},
         ),
     ]

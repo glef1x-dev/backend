@@ -1,30 +1,31 @@
-from typing import Any, Iterable, Iterator, TypeVar
+from typing import Any
 
 from django.db import transaction
 
 from blog.models import Article
+from blog.models import ArticleLike
 from blog.models import ArticleTag
 from blog.models import ArticleTagItem
-
-_T = TypeVar("_T")
+from common.orm_utils import create_m2m_related_objects
 
 
 @transaction.atomic
 def create_article(**kwargs: Any) -> Article:
     tags = kwargs.pop("tags")
     article = Article.objects.create(**kwargs)
-    article_tags = tuple(
-        _only_first_element_from_tuples(
-            ArticleTag.objects.get_or_create(**tag) for tag in tags
-        )
+    create_m2m_related_objects(
+        tags,
+        first_related_model_instance=article,
+        second_related_model_cls=ArticleTag,
+        through_model_cls=ArticleTagItem,
     )
 
-    article_tag_to_tag_associations = [
-        ArticleTagItem(tag=tag, post=article) for tag in article_tags
-    ]
-    Article.tags.through.objects.bulk_create(article_tag_to_tag_associations)
+    if likes := kwargs.get("likes"):
+        create_m2m_related_objects(
+            likes,
+            first_related_model_instance=article,
+            second_related_model_cls=ArticleLike,
+            through_model_cls=article.likes.through,
+        )
+
     return article
-
-
-def _only_first_element_from_tuples(collection: Iterable[_T]) -> Iterator[_T]:
-    return map(lambda o: o[0], collection)

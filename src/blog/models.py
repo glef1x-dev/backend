@@ -17,8 +17,11 @@ class Article(TimestampedModel):
     )
     body = models.TextField(default="hello world", verbose_name="Article content")
     image = models.ImageField(verbose_name="image of the post", null=False)
-    tags = models.ManyToManyField("ArticleTag", through="ArticleTagItem")
+    tags = models.ManyToManyField(
+        "ArticleTag", through="ArticleTagItem", related_name="articles"
+    )
     slug = AutoSlugField(null=False, blank=False, populate_from="title")
+    likes = models.ManyToManyField("ArticleLike", related_name="articles")
 
     def clean(self) -> None:
         if self.pk is None:
@@ -36,12 +39,6 @@ class Article(TimestampedModel):
 class ArticleLike(TimestampedModel):
     ip_address = models.GenericIPAddressField(null=True)
     browser_fingerprint = models.TextField()
-    article = models.ForeignKey(
-        to=Article, on_delete=models.CASCADE, related_name="likes"
-    )
-
-    class Meta:
-        unique_together = [("browser_fingerprint", "article")]
 
 
 class ArticleTag(DefaultModel):

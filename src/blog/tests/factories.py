@@ -32,7 +32,7 @@ class ArticleLikeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ArticleLike
 
-    ip_address = factory.Faker('ipv4')
+    ip_address = factory.Faker("ipv4")
     browser_fingerprint = "fake_fingerprint"
 
 
@@ -40,12 +40,12 @@ class ArticleLikeFactory(factory.django.DjangoModelFactory):
 class ArticleFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Article
-        exclude = ('images',)
+        exclude = ("images",)
 
     title = "test"
     description = "test"
     body = "test"
-    image = factory.django.ImageField(color='blue')
+    image = factory.django.ImageField(color="blue")
 
     @factory.post_generation
     def tags(self, create: bool, extracted: List[ArticleTag]) -> None:
@@ -66,7 +66,7 @@ def article__tags(article_tag: ArticleTag):
     return [article_tag]
 
 
-@fixture(autouse=True, scope='session')
+@fixture(autouse=True, scope="session")
 def my_fixture():
     yield
 

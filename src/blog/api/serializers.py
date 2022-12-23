@@ -33,7 +33,7 @@ class ArticleSerializer(WritableNestedModelSerializer):
     tags = ArticleTagSerializer(many=True)
     image = HybridImageField()
     likes_count = serializers.SerializerMethodField(read_only=True)
-    likes = ArticleLikeSerializer(many=True, write_only=True)
+    likes = ArticleLikeSerializer(many=True, write_only=True, required=False)
 
     def create(self, validated_data: Dict[str, Any]) -> Article:
         return create_article(**validated_data)
@@ -44,7 +44,7 @@ class ArticleSerializer(WritableNestedModelSerializer):
         except AttributeError:
             logger.error(
                 "Likes count field is not set on object required by `ArticleSerializer`."
-                "Set default value for likes count = 0.",
+                "Settings default value for likes count = 0.",
                 stacklevel=2,
             )
             return 0
