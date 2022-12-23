@@ -37,4 +37,9 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
 }
 
+DEBUG = env("DEBUG", cast=bool, default=False)
+
+if DEBUG:
+    SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"] = timedelta(days=1)
+
 REFRESH_TOKEN_COOKIE_NAME = env.str("REFRESH_TOKEN_COOKIE_NAME", "refresh")
