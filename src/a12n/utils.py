@@ -27,14 +27,14 @@ def delete_refresh_token_cookie(response: Response) -> None:
 def _get_base_cookie_params() -> dict[str, Any]:
     base_cookie_params = {
         "key": settings.REFRESH_TOKEN_COOKIE_NAME,
-        "samesite": "Strict",
         "path": "/",
+        "samesite": "None",
     }
 
     if settings.DEBUG:
         return base_cookie_params
 
     base_cookie_params.update(
-        domain=f"https://admin.{settings.ROOT_DOMAIN}",
+        domain=f"https://{settings.ROOT_DOMAIN}",
     )
     return base_cookie_params
