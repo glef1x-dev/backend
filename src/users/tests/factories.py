@@ -4,7 +4,7 @@ import pytest_factoryboy
 from users.models import User
 
 
-@pytest_factoryboy.register
+@pytest_factoryboy.register(scope="module")
 class UserFactory(factory.django.DjangoModelFactory):
     """
     Pytest integrated user factory using pytest-factoryboy
@@ -13,7 +13,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
-    username = "dumb"
-    first_name = "John"
-    last_name = "dumb"
+    username = factory.Faker("user_name")
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
     password = factory.PostGenerationMethodCall("set_password", "dumb")

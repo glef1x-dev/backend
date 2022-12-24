@@ -19,8 +19,8 @@ def test_retrieve_articles(as_anon: ApiClient, article: Article):
     response = as_anon.get(
         reverse("v1:blog:article-list"), format="json", expected_status=HTTP_200_OK
     )
-    assert response["count"] == 1
-    first_blog_post_from_results = response["results"][0]
+    assert response.data["count"] == 1
+    first_blog_post_from_results = response.data["results"][0]
     assert first_blog_post_from_results["slug"] == article.slug
     assert first_blog_post_from_results["title"] == article.title
     assert first_blog_post_from_results[
@@ -78,12 +78,12 @@ def test_delete_article_that_does_not_exists(as_user: ApiClient):
 
 
 def test_get_single_article(as_anon: ApiClient, article: Article):
-    blog_post_json = as_anon.get(
+    response = as_anon.get(
         reverse("v1:blog:article-detail", kwargs={"slug": article.slug}),
         format="json",
         expected_status=HTTP_200_OK,
     )
-    assert blog_post_json["slug"] == article.slug
+    assert response.data["slug"] == article.slug
 
 
 def test_get_single_article_that_does_not_exist(as_user: ApiClient):

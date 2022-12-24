@@ -12,6 +12,8 @@ from common.orm_utils import create_m2m_related_objects
 @transaction.atomic
 def create_article(**kwargs: Any) -> Article:
     tags = kwargs.pop("tags")
+    likes = kwargs.pop("likes", None)
+
     article = Article.objects.create(**kwargs)
     create_m2m_related_objects(
         tags,
@@ -20,7 +22,7 @@ def create_article(**kwargs: Any) -> Article:
         through_model_cls=ArticleTagItem,
     )
 
-    if likes := kwargs.get("likes"):
+    if likes:
         create_m2m_related_objects(
             likes,
             first_related_model_instance=article,

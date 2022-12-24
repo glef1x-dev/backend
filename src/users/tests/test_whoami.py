@@ -1,18 +1,22 @@
 import pytest
 
 from rest_framework.reverse import reverse
+from rest_framework.status import HTTP_401_UNAUTHORIZED
 
-pytestmark = [pytest.mark.django_db]
+from app.testing import ApiClient
+from users.models import User
 
-
-def test_ok(as_user, user):
-    result = as_user.get(reverse("v1:users:get-current-user"))
-
-    assert result["id"] == user.pk
-    assert result["username"] == user.username
+pytestmark = pytest.mark.django_db
 
 
-def test_anon(as_anon):
-    result = as_anon.get(reverse("v1:users:get-current-user"), as_response=True)
+def test_ok(as_user: ApiClient, user: User):
+    response = as_user.get(reverse("v1:users:get-current-user"), format="json")
 
-    assert result.status_code == 401
+    assert response.data["id"] == user.pk
+    assert response.data["username"] == user.username
+
+
+def test_anon_get_current_user_fails(as_anon: ApiClient):
+    as_anon.get(
+        reverse("v1:users:get-current-user"), expected_status=HTTP_401_UNAUTHORIZED
+    )
