@@ -1,4 +1,5 @@
 from drf_spectacular.views import SpectacularAPIView
+from drf_spectacular.views import SpectacularRedocView
 from drf_spectacular.views import SpectacularSwaggerView
 
 from django.urls import include
@@ -11,5 +12,10 @@ urlpatterns = [
     path("blog/", include("blog.urls")),
     path("healthchecks/", include("health_check.urls")),
     path("docs/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("docs/swagger/", SpectacularSwaggerView.as_view(url_name="schema")),
+    path(
+        "docs/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path("docs/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
