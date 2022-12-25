@@ -14,8 +14,6 @@ if env("DEBUG"):
     ROOT_DOMAIN = "localhost"  # dummy value
 else:
     APP_URL = env.str("APP_URL")
-    CSRF_TRUSTED_ORIGINS = [APP_URL]
-
     ROOT_DOMAIN = tldextract.extract(APP_URL).registered_domain
     CORS_ALLOWED_ORIGINS = [f"https://{ROOT_DOMAIN}", f"https://admin.{ROOT_DOMAIN}"]
     CSRF_TRUSTED_ORIGINS = [
