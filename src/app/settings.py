@@ -14,9 +14,9 @@ DEBUG = env("DEBUG", cast=bool, default=False)
 CI = env("CI", cast=bool, default=False)
 
 include(
+    "conf/boilerplate.py",
     "conf/api.py",
     "conf/auth.py",
-    "conf/boilerplate.py",
     "conf/db.py",
     "conf/http.py",
     "conf/i18n.py",
