@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from app.conf.env_reader import env
 
 # Django REST Framework
@@ -44,5 +46,8 @@ SPECTACULAR_SETTINGS = {
         "drf_spectacular.hooks.postprocess_schema_enums",
         "drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields",
     ],
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": settings.DEBUG,  # enabled only in dev mode
+    },
     "CONTACT": {"name": "Hlib", "email": "glebgar567@gmail.com"},
 }
