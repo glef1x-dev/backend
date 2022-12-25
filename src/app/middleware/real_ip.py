@@ -1,12 +1,15 @@
-from typing import Callable
+from typing import Callable, TypeAlias, TypeVar
 
 from ipware import get_client_ip
 
 from django.http import HttpRequest
 from django.http import HttpResponse
 
+RequestHandler: TypeAlias = Callable[[HttpRequest], HttpResponse]
+H = TypeVar("H", bound=RequestHandler)
 
-def real_ip_middleware(get_response: Callable) -> Callable:
+
+def real_ip_middleware(get_response: H) -> H:
     """Set request.META['REMOTE_ADDR'] to ip guessed by django-ipware.
 
     We need this to make sure all apps using ip detection in django way stay usable behind
