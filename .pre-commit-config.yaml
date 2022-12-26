@@ -29,7 +29,7 @@ repos:
       - id: sync_with_poetry
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.189
+    rev: v0.0.193
     hooks:
       - id: ruff
         args:
