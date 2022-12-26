@@ -36,8 +36,8 @@ class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
 
     def get_queryset(self) -> QuerySet[Article]:
         article_queryset = (
-            Article.objects.order_by("created")
-            .prefetch_related("tags")
+            Article.objects.prefetch_related("tags")
+            .order_by("-created")
             .annotate(likes_count=Count("likes__id"))
         )
 
