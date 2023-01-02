@@ -25,6 +25,7 @@ class ArticleFilter(FilterSet):
 
 class ArticleCursorPagination(CursorPagination):
     page_size = 4  # Should be a multiple of 2
+    page_size_query_param = "page_size"
 
 
 @extend_schema(tags=["blog"])
