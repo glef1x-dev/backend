@@ -7,4 +7,4 @@ set -e
 
 cd src && ./manage.py migrate && ./manage.py collectstatic --noinput -i "admin/*" -i "baton/*"
 
-gunicorn --reload --chdir /app/src -b :8000 --access-logfile - app.wsgi:application
+gunicorn --forwarded-allow-ips="*" --reload --chdir /app/src -b :8000 --access-logfile - app.wsgi:application
