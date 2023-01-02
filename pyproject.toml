@@ -47,6 +47,28 @@ ruff = "^0.0.152"
 
 [tool.ruff]
 line-length = 120
+extend-select = ["D"]
+extend-ignore = [
+    "D203",
+    "D204",
+    "D213",
+    "D215",
+    "D400",
+    "D404",
+    "D406",
+    "D407",
+    "D408",
+    "D409",
+    "D413",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+]
 
 [tool.ruff.per-file-ignores]
 "**/migrations/**" = ["E501"]
