@@ -10,7 +10,9 @@ from app.models import TimestampedModel
 
 class Article(TimestampedModel):
     title = models.CharField(
-        max_length=120, verbose_name="Title of the article", db_index=True
+        max_length=120,
+        verbose_name="Title of the article",
+        db_index=True,
     )
     description = models.CharField(
         verbose_name="Description of the article", null=False, max_length=300
@@ -35,10 +37,16 @@ class Article(TimestampedModel):
         verbose_name = "Article"
         indexes = [HashIndex(fields=["slug"])]
 
+    def __str__(self) -> str:
+        return self.title
+
 
 class ArticleLike(TimestampedModel):
     ip_address = models.GenericIPAddressField(null=True)
     browser_fingerprint = models.TextField()
+
+    def __str__(self) -> str:
+        return f"{self.ip_address} -> {self.browser_fingerprint}"
 
 
 class ArticleTag(DefaultModel):
@@ -48,6 +56,9 @@ class ArticleTag(DefaultModel):
         verbose_name_plural = "Article tags"
         verbose_name = "Article tag"
 
+    def __str__(self) -> str:
+        return self.title
+
 
 class ArticleTagItem(DefaultModel):
     tag = models.ForeignKey(ArticleTag, on_delete=models.CASCADE)
@@ -55,3 +66,6 @@ class ArticleTagItem(DefaultModel):
 
     class Meta:
         unique_together = ("tag", "post")
+
+    def __str__(self) -> str:
+        return f"{self.tag.pk} to {self.post.pk}"
