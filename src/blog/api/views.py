@@ -2,6 +2,7 @@ from django_filters import filters
 from django_filters import FilterSet
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
+from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -22,12 +23,17 @@ class ArticleFilter(FilterSet):
         fields = ["tags__title"]
 
 
+class ArticleCursorPagination(CursorPagination):
+    page_size = 4  # Should be a multiple of 2
+
+
 @extend_schema(tags=["blog"])
 class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
     lookup_field = "slug"
     permission_classes = [IsAuthenticatedOrReadOnly]
     filterset_class = ArticleFilter
+    pagination_class = ArticleCursorPagination
 
     def perform_create(self, serializer: ArticleSerializer) -> None:
         article_image: SimpleUploadedFile = serializer.validated_data.get("image")
