@@ -18,7 +18,16 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
 ]
+
 AXES_ENABLED = env("AXES_ENABLED", cast=bool, default=True)
+AXES_FAILURE_LIMIT = 10
+AXES_META_PRECEDENCE_ORDER = [
+    "HTTP_X_FORWARDED_FOR",
+    "REMOTE_ADDR",
+]
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
+# Fifteen minutes
+AXES_COOLOFF_TIME = 0.15
 
 AUTHENTICATION_BACKENDS = [
     "axes.backends.AxesBackend",
