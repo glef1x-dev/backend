@@ -5,6 +5,7 @@ from a12n import signals
 
 class A12NConfig(AppConfig):
     name = "a12n"
+    default = True
 
     def ready(self) -> None:
         from axes.signals import user_locked_out
