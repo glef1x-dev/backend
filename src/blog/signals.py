@@ -8,5 +8,5 @@ from blog.models import Article
 
 @receiver(post_delete, sender=Article)
 @receiver(post_save, sender=Article)
-def object_post_delete_handler(*args, **kwargs):
-    cache.delete("articles")
+def object_post_delete_handler(sender, instance: Article, *args, **kwargs):
+    cache.delete_many(["articles", f"article_{instance.slug}"])

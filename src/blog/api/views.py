@@ -1,9 +1,12 @@
+from typing import Any
+
 from django_filters import filters
 from django_filters import FilterSet
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from django.conf import settings
@@ -52,9 +55,18 @@ class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
 
         return Response(articles)
 
-    def perform_update(self, serializer) -> None:
+    def perform_update(self, serializer: ArticleSerializer) -> None:
         super().perform_update(serializer)
-        cache.delete("articles")
+        cache.delete_many(["articles", f"article_{serializer.data.slug}"])
+
+    def retrieve(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        cache_key = f"article_{self.kwargs[self.lookup_field]}"
+        if not (article := cache.get(cache_key)):
+            article = self.get_object()
+            cache.set(cache_key, article)
+
+        serializer = self.get_serializer(article)
+        return Response(serializer.data)
 
     def get_queryset(self) -> QuerySet[Article]:
         article_queryset = (
