@@ -24,10 +24,9 @@ class ObtainJSONWebTokenView(TokenObtainPairView):
 
 @extend_schema(summary="Refresh a jwt access token")
 class RefreshJSONWebTokenView(TokenRefreshView):
-    """
-    Allows a frontend application to send the refresh token implicitly
+    """Allows a frontend application to send the refresh token implicitly
     and use the `httpOnly` flag on the refresh token cookie in order to
-    avoid potential security problems
+    avoid potential security problems.
     """
 
     def post(self, request: Request, *args: Any, **kwargs: Any) -> Response:

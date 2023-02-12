@@ -25,4 +25,4 @@ def test_remote_addr(as_user: ApiClient) -> None:
         "/api/v1/users/me/", HTTP_X_FORWARDED_FOR="100.200.250.150, 10.0.0.1"
     )
 
-    assert result["remoteAddr"] == "100.200.250.150"
+    assert result.data["remote_addr"] == "100.200.250.150"

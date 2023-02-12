@@ -7,7 +7,7 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.status import HTTP_401_UNAUTHORIZED
 
 from app.testing import ApiClient
-from users.tests.factories import UserFactory
+from users.models import User
 
 pytestmark = pytest.mark.django_db
 
@@ -17,17 +17,16 @@ def _disable_django_axes(settings):
     settings.AXES_ENABLED = False
 
 
-@pytest.fixture(scope="module")
-def token_pair(as_anon: ApiClient, django_db_blocker: _DatabaseBlocker):
+@pytest.fixture(scope="session")
+def token_pair(as_anon: ApiClient, django_db_blocker: _DatabaseBlocker, user: User):
     # We have to unblock database using django_db_blocker in order to use
     # module scoped fixtures in conjunction with pytest-django
     # https://github.com/pytest-dev/pytest-django/issues/514
     with django_db_blocker.unblock():
-        dummy_user = UserFactory.create(password="test")
         response = as_anon.post(
             reverse("v1:a12n:obtain-token"),
             {
-                "username": dummy_user.username,
+                "username": user.username,
                 "password": "test",
             },
             format="json",

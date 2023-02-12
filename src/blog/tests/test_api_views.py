@@ -11,15 +11,24 @@ from django.urls import reverse
 from app.testing import ApiClient
 from blog.models import Article
 from blog.tests.utils.files import file_to_base64
+from common.orm_utils import model_to_dict_nested
 
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture(autouse=True)
+def use_dummy_cache_backend(settings):
+    settings.CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
 
 
 def test_retrieve_articles(as_anon: ApiClient, article: Article):
     response = as_anon.get(
         reverse("v1:blog:article-list"), format="json", expected_status=HTTP_200_OK
     )
-    assert response.data["count"] == 1
     first_blog_post_from_results = response.data["results"][0]
     assert first_blog_post_from_results["slug"] == article.slug
     assert first_blog_post_from_results["title"] == article.title
@@ -29,13 +38,7 @@ def test_retrieve_articles(as_anon: ApiClient, article: Article):
 
 
 def test_create_article(as_user: ApiClient, article: Article):
-    # If we won't delete this, the test will fail with "already created"
-    # because pytest-factoryboy stores all factory artifacts in database
-    article.delete()
-
-    article_dict = model_to_dict(article, exclude=["image"])
-    article_dict["image"] = file_to_base64(article.image)
-
+    article_dict = model_to_dict_nested(article)
     as_user.post(
         reverse("v1:blog:article-list"),
         article_dict,

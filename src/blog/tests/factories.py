@@ -36,7 +36,7 @@ class ArticleLikeFactory(factory.django.DjangoModelFactory):
     browser_fingerprint = "fake_fingerprint"
 
 
-@pytest_factoryboy.register(name="article")
+@pytest_factoryboy.register(_name="article")
 class ArticleFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Article
@@ -59,9 +59,8 @@ class ArticleFactory(factory.django.DjangoModelFactory):
 
 @pytest.fixture
 def article__tags(article_tag: ArticleTag):
-    """
-    Override article tags because there is no other way
-    to inject them to pytest_factoryboy except for creating a fixture
+    """Override article tags because there is no other way
+    to inject them to pytest_factoryboy except for creating a fixture.
     """
     return [article_tag]
 

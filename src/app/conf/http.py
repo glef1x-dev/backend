@@ -7,7 +7,7 @@ from app.conf.env_reader import env
 
 ALLOWED_HOSTS = ["*"]  # host validation is not necessary in 2022
 
-if env("DEBUG"):
+if env("DEBUG", default=True):
     CSRF_TRUSTED_ORIGINS = ["http://localhost:8000"]
     APP_URL = "http://localhost:8000"
     CORS_ALLOW_ALL_ORIGINS = True

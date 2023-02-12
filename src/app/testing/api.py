@@ -38,7 +38,7 @@ class ApiClient(DRFAPIClient):
         kwargs["format"] = kwargs.get("format", "json")
         method = getattr(super(), method)
 
-        response = method(*args, **kwargs)
+        response: Response = method(*args, **kwargs)
         assert response.status_code == expected
         return response
 

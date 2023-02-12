@@ -1,5 +1,3 @@
-from django.conf import settings
-
 from app.conf.env_reader import env
 
 DEFAULT_FILE_STORAGE = env(
@@ -8,7 +6,7 @@ DEFAULT_FILE_STORAGE = env(
     default="django.core.files.storage.FileSystemStorage",
 )
 
-if not settings.DEBUG:
+if not env("DEBUG", default=True):
     AWS_ACCESS_KEY_ID = env("S3_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = env("S3_SECRET_ACCESS_KEY")
     AWS_S3_REGION_NAME = env("S3_REGION_NAME")

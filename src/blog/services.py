@@ -15,7 +15,6 @@ def create_article(**kwargs: Any) -> Article:
     likes = kwargs.pop("likes", None)
 
     article = Article.objects.create(**kwargs)
-    article.full_clean()
 
     create_m2m_related_objects(
         tags,
@@ -32,4 +31,5 @@ def create_article(**kwargs: Any) -> Article:
             through_model_cls=article.likes.through,
         )
 
+    article.full_clean()
     return article
