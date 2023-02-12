@@ -29,4 +29,5 @@ include(
     "conf/templates.py",
     "conf/timezone.py",
     "conf/logs.py",
+    "conf/caching.py",
 )

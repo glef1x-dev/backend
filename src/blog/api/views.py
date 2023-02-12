@@ -4,7 +4,10 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.pagination import CursorPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
+from django.conf import settings
+from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models import Count
 from django.db.models import QuerySet
@@ -40,6 +43,18 @@ class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
         article_image: SimpleUploadedFile = serializer.validated_data.get("image")
         convert_image_to_webp_format(article_image)
         serializer.save()
+
+    def list(self, request, *args, **kwargs):
+        if not (articles := cache.get("articles")):
+            response = super().list(request, *args, **kwargs)
+            cache.set("articles", response.data, settings.DEFAULT_CACHE_TIME)
+            return response
+
+        return Response(articles)
+
+    def perform_update(self, serializer) -> None:
+        super().perform_update(serializer)
+        cache.delete("articles")
 
     def get_queryset(self) -> QuerySet[Article]:
         article_queryset = (
