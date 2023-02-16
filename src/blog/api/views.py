@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List
 
 from django_filters import filters
 from django_filters import FilterSet
@@ -17,6 +17,9 @@ from django.db.models import QuerySet
 
 from blog.api.serializers import ArticleSerializer
 from blog.models import Article
+from blog.models import ArticleTag
+from blog.utils.cache import compose_cache_key
+from blog.utils.cache import get_all_possible_cache_keys_to_invalidate
 from common.images import convert_image_to_webp_format
 from common.rest_api.api_view_error_mixin import DeveloperErrorViewMixin
 
@@ -30,7 +33,7 @@ class ArticleFilter(FilterSet):
 
 
 class ArticleCursorPagination(CursorPagination):
-    page_size = 4  # Should be a multiple of 2
+    page_size = 4
     page_size_query_param = "page_size"
 
 
@@ -48,22 +51,27 @@ class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
         serializer.save()
 
     def list(self, request, *args, **kwargs):
-        if not (articles := cache.get("articles")):
+        # TODO: maybe I should make more generic caching and don't be so bounded to specifics
+        cache_key = compose_cache_key(
+            "articles", request.query_params.get("tags__title")
+        )
+        if not (articles := cache.get(cache_key)):
             response = super().list(request, *args, **kwargs)
-            cache.set("articles", response.data, settings.DEFAULT_CACHE_TIME)
+            cache.set(cache_key, response.data, settings.DEFAULT_CACHE_TIME)
             return response
 
         return Response(articles)
 
     def perform_update(self, serializer: ArticleSerializer) -> None:
         super().perform_update(serializer)
-        cache.delete_many(["articles", f"article_{serializer.data.slug}"])
+        tags: List[ArticleTag] = serializer.data.tags
+        cache.delete_many([*get_all_possible_cache_keys_to_invalidate(tags=tags)])
 
     def retrieve(self, request: Request, *args: Any, **kwargs: Any) -> Response:
-        cache_key = f"article_{self.kwargs[self.lookup_field]}"
+        cache_key = compose_cache_key("article", self.kwargs[self.lookup_field])
         if not (article := cache.get(cache_key)):
             article = self.get_object()
-            cache.set(cache_key, article)
+            cache.set(cache_key, article, settings.DEFAULT_CACHE_TIME)
 
         serializer = self.get_serializer(article)
         return Response(serializer.data)

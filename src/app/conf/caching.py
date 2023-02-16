@@ -7,4 +7,4 @@ CACHES = {
     }
 }
 
-DEFAULT_CACHE_TIME = 60 * 5  # 5 minutes
+DEFAULT_CACHE_TIME = 60 * 60 * 5  # 5 hours
