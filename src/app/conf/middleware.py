@@ -1,6 +1,7 @@
 from django.conf import settings
 
 MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -14,6 +15,7 @@ MIDDLEWARE = [
     "axes.middleware.AxesMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django_structlog.middlewares.RequestMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 if not settings.DEBUG:

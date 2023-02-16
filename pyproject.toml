@@ -28,12 +28,13 @@ djangorestframework-simplejwt = { extras = ["crypto"], version = "^5.2.1" }
 django-cors-headers = "^3.13.0"
 Pillow = "^9.2.0"
 python-json-logger = "^2.0.4"
-django-structlog = "^4.0.0"
+django-structlog = "^4.1.1"
 django-extensions = "^3.2.1"
-boto3 = "^1.26.64"
+boto3 = "^1.26.66"
 drf-extra-fields = "^3.4.1"
 drf-writable-nested = "^0.7.0"
 tldextract = "^3.4.0"
+django-prometheus = "^2.2.0"
 redis = "^4.5.1"
 
 
@@ -45,6 +46,9 @@ pytest-factoryboy = "^2.5.0"
 djangorestframework-stubs = "^1.7.0"
 ruff = "^0.0.152"
 django-baton = "^2.6.2"
+mypy = "^1.0.0"
+pytest-pretty = "^1.1.0"
+fakeredis = "^2.8.0"
 
 [tool.ruff]
 line-length = 120

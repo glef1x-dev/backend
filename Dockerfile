@@ -35,14 +35,16 @@ RUN --mount=type=cache,target="$POETRY_HOME/cache" \
     --mount=type=cache,target="$POETRY_HOME/artifacts" \
     poetry install --only main --no-root
 
-FROM python-base
+FROM python-base as production
+
+RUN groupadd -r backend && useradd -r -g backend backend
+
+COPY --chown=backend:backend scripts/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 
-COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-# USER glibgaranin
+USER backend
 WORKDIR /app
 COPY . .
 

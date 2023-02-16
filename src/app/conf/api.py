@@ -36,8 +36,8 @@ REST_FRAMEWORK = {
 
 # Set up drf_spectacular, https://drf-spectacular.readthedocs.io/en/latest/settings.html
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Admin auth/data provider",
-    "DESCRIPTION": "Serves as a provider for admin panel",
+    "TITLE": "glefix.xyz API",
+    "DESCRIPTION": "Serves as a data provider for admin panel and website",
     "SWAGGER_UI_DIST": "SIDECAR",
     "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
     "VERSION": "1.0.0",

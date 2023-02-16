@@ -10,6 +10,7 @@ api = [
 
 urlpatterns = [
     path("api/", include(api)),
+    path("", include("django_prometheus.urls")),
 ]
 
 # Our real admin panel is written with react-admin

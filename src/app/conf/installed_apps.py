@@ -26,10 +26,12 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "axes",
     "baton",
+    "django_prometheus",
 ]
 
 INSTALLED_APPS = APPS + HEALTH_CHECKS_APPS + THIRD_PARTY_APPS
 
+# In production disable unused apps
 if not settings.DEBUG:
     INSTALLED_APPS.remove("baton")
     INSTALLED_APPS.remove("django.contrib.admin")
