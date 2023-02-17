@@ -33,7 +33,7 @@ class ArticleFilter(FilterSet):
 
 
 class ArticleCursorPagination(CursorPagination):
-    page_size = 4
+    page_size = 10
     page_size_query_param = "page_size"
 
 
@@ -50,10 +50,16 @@ class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
         convert_image_to_webp_format(article_image)
         serializer.save()
 
-    def list(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs) -> Response:
         # TODO: maybe I should make more generic caching and don't be so bounded to specifics
+        if request.query_params.get(
+            self.pagination_class.page_size_query_param
+        ) or request.query_params.get(self.pagination_class.cursor_query_param):
+            return super().list(request, *args, **kwargs)
+
         cache_key = compose_cache_key(
-            "articles", request.query_params.get("tags__title")
+            "articles",
+            request.query_params.get("tags__title"),
         )
         if not (articles := cache.get(cache_key)):
             response = super().list(request, *args, **kwargs)

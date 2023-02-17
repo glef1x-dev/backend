@@ -3,7 +3,6 @@ import pytest
 from rest_framework.status import HTTP_200_OK
 
 from django.core.cache import cache
-from django.core.cache import caches
 from django.urls import reverse
 
 from app.testing import ApiClient
@@ -11,11 +10,6 @@ from blog.models import Article
 from blog.models import ArticleTag
 
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture(autouse=True)
-def clear_cache():
-    caches["default"].clear()
 
 
 def test_list_articles_add_articles_to_cache(as_anon: ApiClient):
