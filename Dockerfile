@@ -45,7 +45,7 @@ RUN chmod +x /docker-entrypoint.sh
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 
 WORKDIR /app
-COPY --chown backend:backend . .
+COPY . .
 
 USER backend
 EXPOSE 8000
