@@ -1,4 +1,4 @@
-from django.conf import settings
+from app.conf.env_reader import env
 
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
@@ -18,7 +18,7 @@ MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
-if not settings.DEBUG:
+if not env("DEBUG", default=True):
     MIDDLEWARE.remove("django.contrib.sessions.middleware.SessionMiddleware")
     MIDDLEWARE.remove("django.contrib.auth.middleware.AuthenticationMiddleware")
     MIDDLEWARE.remove("django.contrib.messages.middleware.MessageMiddleware")

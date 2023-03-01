@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from blog.models import ArticleTag
 from blog.utils.cache import compose_cache_key
-from blog.utils.cache import get_all_possible_cache_keys_to_invalidate
+from blog.utils.cache import iter_all_possible_cache_keys_to_invalidate
 
 
 @pytest.mark.parametrize(
@@ -40,6 +40,6 @@ def test_get_all_possible_cache_keys_to_invalidate(
     tags: List[ArticleTag] | None,
 ):
     assert (
-        list(get_all_possible_cache_keys_to_invalidate(slug=slug, tags=tags))
+        list(iter_all_possible_cache_keys_to_invalidate(slug=slug, tags=tags))
         == expected_result
     )

@@ -37,4 +37,5 @@ include(
     "conf/timezone.py",
     "conf/logs.py",
     "conf/caching.py",
+    "conf/third_party.py",
 )

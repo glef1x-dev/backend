@@ -50,3 +50,4 @@ def test_cache_takes_into_account_pagination_params(as_anon: ApiClient):
     response2 = as_anon.get(next_url, format="json", expected_status=HTTP_200_OK)
 
     assert response1.data != response2.data
+    assert response1.data == cache.get("articles")

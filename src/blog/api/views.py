@@ -19,7 +19,7 @@ from blog.api.serializers import ArticleSerializer
 from blog.models import Article
 from blog.models import ArticleTag
 from blog.utils.cache import compose_cache_key
-from blog.utils.cache import get_all_possible_cache_keys_to_invalidate
+from blog.utils.cache import iter_all_possible_cache_keys_to_invalidate
 from common.images import convert_image_to_webp_format
 from common.rest_api.api_view_error_mixin import DeveloperErrorViewMixin
 
@@ -71,7 +71,7 @@ class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
     def perform_update(self, serializer: ArticleSerializer) -> None:
         super().perform_update(serializer)
         tags: List[ArticleTag] = serializer.data.tags
-        cache.delete_many([*get_all_possible_cache_keys_to_invalidate(tags=tags)])
+        cache.delete_many([*iter_all_possible_cache_keys_to_invalidate(tags=tags)])
 
     def retrieve(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         cache_key = compose_cache_key("article", self.kwargs[self.lookup_field])

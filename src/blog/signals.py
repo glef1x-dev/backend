@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 from blog.models import Article
 from blog.models import ArticleTag
-from blog.utils.cache import get_all_possible_cache_keys_to_invalidate
+from blog.utils.cache import iter_all_possible_cache_keys_to_invalidate
 
 
 @receiver(post_delete, sender=Article)
@@ -15,7 +15,7 @@ def object_post_delete_handler(sender, instance: Article, *args, **kwargs):
     article_tags: QuerySet[ArticleTag] = instance.tags.all()
     cache.delete_many(
         [
-            *get_all_possible_cache_keys_to_invalidate(
+            *iter_all_possible_cache_keys_to_invalidate(
                 slug=instance.slug, tags=list(article_tags)
             )
         ]

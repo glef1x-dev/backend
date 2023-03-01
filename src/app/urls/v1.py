@@ -10,6 +10,7 @@ urlpatterns = [
     path("auth/", include("a12n.urls")),
     path("users/", include("users.urls")),
     path("blog/", include("blog.urls")),
+    path("third-party/", include("third_party.urls")),
     path("healthchecks/", include("health_check.urls")),
     path("docs/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(

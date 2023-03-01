@@ -20,7 +20,7 @@ def change_media_root_directory(settings: LazySettings):
     settings.MEDIA_ROOT = _BASE_TESTS_DIR / "media"
 
 
-@pytest_factoryboy.register(name="article_tag")
+@pytest_factoryboy.register(name="article_tag", scope="session")
 class ArticleTagFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ArticleTag
@@ -61,7 +61,7 @@ class ArticleFactory(factory.django.DjangoModelFactory):
 def article__tags(article_tag: ArticleTag):
     """Override article tags because there is no other way
     to inject them to pytest_factoryboy except for creating a fixture.
-    """
+    """  # noqa: D205
     return [article_tag]
 
 

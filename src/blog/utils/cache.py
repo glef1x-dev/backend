@@ -8,7 +8,7 @@ def compose_cache_key(prefix: str, *parts: str | None):
     return ":".join([prefix, *parts_without_none_values])
 
 
-def get_all_possible_cache_keys_to_invalidate(
+def iter_all_possible_cache_keys_to_invalidate(
     *, slug: str | None = None, tags: List[ArticleTag] | None = None
 ) -> Generator[str, None, None]:
     yield "articles"
