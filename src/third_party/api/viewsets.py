@@ -1,21 +1,23 @@
 from typing import Any
 
+from github import Github
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
+from urllib3 import Retry
 
-from third_party.services import GithubService
+from django.conf import settings
 
 
 class GithubApiView(GenericAPIView):
-    github_service: GithubService = None
-
-    def __init__(self, github_service: GithubService, **kwargs: Any):
+    def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)
-        self.github_service = github_service
+        self._github_api_client = Github(
+            login_or_token=settings.GITHUB_API_TOKEN, retry=Retry(total=20)
+        )
 
     def get(self, request: Request, repo: str, owner: str) -> Response:
-        repository = self.github_service.get_repository(repo, owner)
+        repository = self._github_api_client.get_repo(f"{owner}/{repo}")
         return Response(
             {
                 "stargazers_count": repository.stargazers_count,
