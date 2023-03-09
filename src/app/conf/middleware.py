@@ -15,6 +15,7 @@ MIDDLEWARE = [
     "axes.middleware.AxesMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django_structlog.middlewares.RequestMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
@@ -22,3 +23,4 @@ if not env("DEBUG", default=True):
     MIDDLEWARE.remove("django.contrib.sessions.middleware.SessionMiddleware")
     MIDDLEWARE.remove("django.contrib.auth.middleware.AuthenticationMiddleware")
     MIDDLEWARE.remove("django.contrib.messages.middleware.MessageMiddleware")
+    MIDDLEWARE.remove("debug_toolbar.middleware.DebugToolbarMiddleware")

@@ -28,6 +28,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "axes",
     "django_prometheus",
+    "debug_toolbar",
     "baton.autodiscover",
 ]
 
@@ -42,3 +43,4 @@ if not env("DEBUG", default=True):
     INSTALLED_APPS.remove("django.contrib.sessions")
     INSTALLED_APPS.remove("django.contrib.messages")
     INSTALLED_APPS.remove("baton.autodiscover")
+    INSTALLED_APPS.remove("debug_toolbar")

@@ -20,5 +20,6 @@ if env("DEBUG", cast=bool, default=True):
     urlpatterns += [
         path("admin/", admin.site.urls),
         path("baton/", include("baton.urls")),
+        path("__debug__/", include("debug_toolbar.urls")),
     ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -13,9 +13,7 @@ else:
     RENDERER = structlog.processors.JSONRenderer(serializer=settings.JSON_SERIALIZER)
 
 LOGGING_TIMESTAMP_FORMAT = env("LOGGING_TIMESTAMP_FORMAT", cast=str, default="iso")
-logging_level_name = env(
-    "LOGGING_LEVEL", cast=str, default="DEBUG" if settings.DEBUG else "INFO"
-)
+logging_level_name = env("LOGGING_LEVEL", cast=str, default="INFO")
 try:
     LOGGING_LEVEL = logging.getLevelNamesMapping()[logging_level_name]
 except KeyError:

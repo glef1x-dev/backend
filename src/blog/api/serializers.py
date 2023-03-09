@@ -1,4 +1,3 @@
-import logging
 from typing import Any, Dict
 
 from drf_extra_fields.fields import HybridImageField
@@ -9,8 +8,6 @@ from blog.models import Article
 from blog.models import ArticleLike
 from blog.models import ArticleTag
 from blog.services import create_article
-
-logger = logging.getLogger(__name__)
 
 
 class ArticleTagSerializer(serializers.ModelSerializer):
@@ -38,15 +35,23 @@ class ArticleSerializer(WritableNestedModelSerializer):
     def create(self, validated_data: Dict[str, Any]) -> Article:
         return create_article(**validated_data)
 
+    @property
+    def _readable_fields(self):
+        for field in self.fields.values():
+            if field.write_only:
+                continue
+            if (
+                self.parent
+                and field.field_name in self.Meta.deferred_fields_for_list_serializer
+            ):
+                continue
+
+            yield field
+
     def get_likes_count(self, article: Article) -> int:
         try:
             return article.likes_count
         except AttributeError:
-            logger.error(
-                "Likes count field is not set on object required by `ArticleSerializer`."
-                "Settings default value for likes count = 0.",
-                stacklevel=2,
-            )
             return 0
 
     class Meta:
@@ -65,3 +70,4 @@ class ArticleSerializer(WritableNestedModelSerializer):
             "slug",
         ]
         ordering = ("-modified",)
+        deferred_fields_for_list_serializer = ["body", "description"]
