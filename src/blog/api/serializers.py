@@ -8,6 +8,7 @@ from blog.models import Article
 from blog.models import ArticleLike
 from blog.models import ArticleTag
 from blog.services import create_article
+from common.rest_api.deferred import DeferredSerializerMixin
 
 
 class ArticleTagSerializer(serializers.ModelSerializer):
@@ -26,7 +27,7 @@ class ArticleLikeSerializer(serializers.ModelSerializer):
         fields = ("ip_address", "browser_fingerprint")
 
 
-class ArticleSerializer(WritableNestedModelSerializer):
+class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
     tags = ArticleTagSerializer(many=True)
     image = HybridImageField()
     likes_count = serializers.SerializerMethodField(read_only=True)
@@ -62,3 +63,4 @@ class ArticleSerializer(WritableNestedModelSerializer):
             "reading_time_minutes",
         ]
         ordering = ("-modified", "-created")
+        deferred_fields_for_list_serializer = ["body", "description"]
