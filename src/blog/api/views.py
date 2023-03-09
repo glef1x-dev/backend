@@ -89,7 +89,4 @@ class ArticleViewSet(DeveloperErrorViewMixin, viewsets.ModelViewSet):
             .annotate(likes_count=Count("likes__id"))
         )
 
-        if self.request.method == "GET" and not self.detail:
-            article_queryset = article_queryset.defer("body", "description")
-
         return article_queryset

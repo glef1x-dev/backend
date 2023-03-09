@@ -29,7 +29,7 @@ class ArticleLikeSerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
     tags = ArticleTagSerializer(many=True)
-    image = HybridImageField()
+    image = HybridImageField(required=True)
     likes_count = serializers.SerializerMethodField(read_only=True)
     likes = ArticleLikeSerializer(many=True, write_only=True, required=False)
     reading_time_minutes = serializers.FloatField(read_only=True)
@@ -63,4 +63,4 @@ class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
             "reading_time_minutes",
         ]
         ordering = ("-modified", "-created")
-        deferred_fields_for_list_serializer = ["body", "description"]
+        exclude_from_response_when_many = ["body", "description"]

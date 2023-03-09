@@ -6,12 +6,11 @@ class DeferredSerializerMixin:
                 continue
             if (
                 self.parent
-                and field.field_name
-                in type(self).Meta.deferred_fields_for_list_serializer
+                and field.field_name in type(self).Meta.exclude_from_response_when_many
             ):
                 continue
 
             yield field
 
     class Meta:
-        deferred_fields_for_list_serializer = []
+        exclude_from_response_when_many = []
