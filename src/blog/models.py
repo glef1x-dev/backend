@@ -7,6 +7,8 @@ from django.db import models
 from app.models import DefaultModel
 from app.models import TimestampedModel
 
+AVERAGE_APPROXIMATE_WORDS_PER_MINUTE_READ = 225
+
 
 class Article(TimestampedModel):
     title = models.CharField(
@@ -31,6 +33,11 @@ class Article(TimestampedModel):
 
         if self.tags.count() < 1:
             raise ValidationError("There is should be at least one tag specified.")
+
+    @property
+    def reading_time(self) -> float:
+        words_count = len(self.body.strip().split())
+        return words_count / AVERAGE_APPROXIMATE_WORDS_PER_MINUTE_READ
 
     class Meta:
         verbose_name_plural = "Articles"

@@ -8,7 +8,6 @@ from blog.models import Article
 from blog.models import ArticleLike
 from blog.models import ArticleTag
 from blog.services import create_article
-from common.rest_api.deferred import DeferredSerializerMixin
 
 
 class ArticleTagSerializer(serializers.ModelSerializer):
@@ -27,11 +26,12 @@ class ArticleLikeSerializer(serializers.ModelSerializer):
         fields = ("ip_address", "browser_fingerprint")
 
 
-class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
+class ArticleSerializer(WritableNestedModelSerializer):
     tags = ArticleTagSerializer(many=True)
     image = HybridImageField()
     likes_count = serializers.SerializerMethodField(read_only=True)
     likes = ArticleLikeSerializer(many=True, write_only=True, required=False)
+    reading_time_minutes = serializers.FloatField(read_only=True)
 
     def create(self, validated_data: Dict[str, Any]) -> Article:
         return create_article(**validated_data)
@@ -41,6 +41,9 @@ class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
             return article.likes_count
         except AttributeError:
             return 0
+
+    def get_reading_time_minutes(self, article: Article) -> float:
+        return article.reading_time
 
     class Meta:
         model = Article
@@ -56,6 +59,6 @@ class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
             "body",
             "tags",
             "slug",
+            "reading_time_minutes",
         ]
-        ordering = ("-modified",)
-        deferred_fields_for_list_serializer = ["body", "description"]
+        ordering = ("-modified", "-created")
