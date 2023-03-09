@@ -8,6 +8,7 @@ from blog.models import Article
 from blog.models import ArticleLike
 from blog.models import ArticleTag
 from blog.services import create_article
+from common.rest_api.deferred import DeferredSerializerMixin
 
 
 class ArticleTagSerializer(serializers.ModelSerializer):
@@ -26,7 +27,7 @@ class ArticleLikeSerializer(serializers.ModelSerializer):
         fields = ("ip_address", "browser_fingerprint")
 
 
-class ArticleSerializer(WritableNestedModelSerializer):
+class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
     tags = ArticleTagSerializer(many=True)
     image = HybridImageField()
     likes_count = serializers.SerializerMethodField(read_only=True)
@@ -34,19 +35,6 @@ class ArticleSerializer(WritableNestedModelSerializer):
 
     def create(self, validated_data: Dict[str, Any]) -> Article:
         return create_article(**validated_data)
-
-    @property
-    def _readable_fields(self):
-        for field in self.fields.values():
-            if field.write_only:
-                continue
-            if (
-                self.parent
-                and field.field_name in self.Meta.deferred_fields_for_list_serializer
-            ):
-                continue
-
-            yield field
 
     def get_likes_count(self, article: Article) -> int:
         try:
