@@ -32,7 +32,7 @@ class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
     image = HybridImageField(required=True)
     likes_count = serializers.SerializerMethodField(read_only=True)
     likes = ArticleLikeSerializer(many=True, write_only=True, required=False)
-    reading_time_minutes = serializers.FloatField(read_only=True)
+    reading_time_in_minutes = serializers.ReadOnlyField()
 
     def create(self, validated_data: Dict[str, Any]) -> Article:
         return create_article(**validated_data)
@@ -42,9 +42,6 @@ class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
             return article.likes_count
         except AttributeError:
             return 0
-
-    def get_reading_time_minutes(self, article: Article) -> float:
-        return article.reading_time
 
     class Meta:
         model = Article
@@ -60,7 +57,7 @@ class ArticleSerializer(DeferredSerializerMixin, WritableNestedModelSerializer):
             "body",
             "tags",
             "slug",
-            "reading_time_minutes",
+            "reading_time_in_minutes",
         ]
         ordering = ("-modified", "-created")
-        exclude_from_response_when_many = ["body", "description"]
+        exclude_from_response_when_many = ["body"]

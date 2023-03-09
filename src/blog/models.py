@@ -35,9 +35,9 @@ class Article(TimestampedModel):
             raise ValidationError("There is should be at least one tag specified.")
 
     @property
-    def reading_time(self) -> float:
+    def reading_time_in_minutes(self) -> float:
         words_count = len(self.body.strip().split())
-        return words_count / AVERAGE_APPROXIMATE_WORDS_PER_MINUTE_READ
+        return words_count // AVERAGE_APPROXIMATE_WORDS_PER_MINUTE_READ
 
     class Meta:
         verbose_name_plural = "Articles"
