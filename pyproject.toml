@@ -51,6 +51,7 @@ mypy = "^1.0.0"
 pytest-pretty = "^1.1.0"
 fakeredis = "^2.8.0"
 django-debug-toolbar = "^3.8.1"
+djangorestframework-stubs = {extras = ["compatible-mypy"], version = "^1.9.1"}
 
 [tool.ruff]
 line-length = 120
