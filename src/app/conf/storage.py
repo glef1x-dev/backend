@@ -11,4 +11,6 @@ if not env("DEBUG", default=True):
     AWS_SECRET_ACCESS_KEY = env("S3_SECRET_ACCESS_KEY")
     AWS_S3_REGION_NAME = env("S3_REGION_NAME")
     AWS_STORAGE_BUCKET_NAME = env("S3_BUCKET_NAME")
+    # For CloudFront
+    AWS_S3_CUSTOM_DOMAIN = env("S3_CUSTOM_DOMAIN", default=None)
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
