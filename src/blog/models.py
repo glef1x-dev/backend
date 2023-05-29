@@ -6,8 +6,9 @@ from django.db import models
 
 from app.models import DefaultModel
 from app.models import TimestampedModel
+from blog.utils.reading_time import reading_time
 
-AVERAGE_APPROXIMATE_WORDS_PER_MINUTE_READ = 225
+AVERAGE_APPROXIMATE_WORDS_PER_MINUTE_READ = 265
 
 
 class Article(TimestampedModel):
@@ -35,9 +36,10 @@ class Article(TimestampedModel):
             raise ValidationError("There is should be at least one tag specified.")
 
     @property
-    def reading_time_in_minutes(self) -> float:
-        words_count = len(self.body.strip().split())
-        return words_count // AVERAGE_APPROXIMATE_WORDS_PER_MINUTE_READ
+    def reading_time_in_minutes(self) -> int:
+        return reading_time(
+            self.body, words_per_minute=AVERAGE_APPROXIMATE_WORDS_PER_MINUTE_READ
+        )["minutes"]
 
     class Meta:
         verbose_name_plural = "Articles"
